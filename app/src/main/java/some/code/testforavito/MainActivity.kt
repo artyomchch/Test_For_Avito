@@ -33,21 +33,20 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         numberAdapter.notifyItemInserted(index)
         //val newItem = NumberPost("new item add, pos: $index", "delete")
 
-
-
-
     }
 
 
     fun removeItem(position: Int){
-
+        DataSource.deletePosition(position)
+        numberAdapter.notifyItemRemoved(position)
     }
 
 
 
     override fun onItemClick(position: Int) {
         Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
-        insertItem(4)
+        //insertItem(4)
+        removeItem(position)
         numberAdapter.notifyItemChanged(position)
     }
 

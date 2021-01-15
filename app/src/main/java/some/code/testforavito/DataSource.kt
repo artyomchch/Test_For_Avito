@@ -25,7 +25,10 @@ class DataSource {
             list.add(
                 NumberPost(position.toString(), "delete")
             )
+        }
 
+        fun deletePosition(position: Int){
+            list.removeAt(position)
         }
     }
 }

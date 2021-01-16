@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import some.code.testforavito.logic.NumberLogic
 import kotlin.random.Random
 
 @Suppress("DEPRECATION")
@@ -30,11 +31,17 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         mToastRunnable.run()
     }
 
+    fun stopRepeating(){
+        mHandler.removeCallbacks(mToastRunnable)
+    }
+
     private val mToastRunnable: Runnable = object : Runnable {
         override fun run() {
-            asyncRandomNumbers(5)
-            Toast.makeText(this@MainActivity, "This is a delayed toast", Toast.LENGTH_SHORT).show()
             mHandler.postDelayed(this, 5000)
+            Toast.makeText(this@MainActivity, "5 sec", Toast.LENGTH_SHORT).show()
+
+
+            asyncRandomNumbers(100)
         }
     }
 
@@ -43,14 +50,16 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         val data = DataSource.createDataSet()
         numberAdapter.submitList(data)
 
-    }
 
-    fun insertItem(randomNumber: Int){
-        val index = Random.nextInt(randomNumber)
-        DataSource.addDataSet(index)
-        numberAdapter.notifyItemInserted(index)
 
     }
+
+//    fun insertItem(randomNumber: Int){
+//        val index = Random.nextInt(randomNumber)
+//        DataSource.addDataSet(index)
+//        numberAdapter.notifyItemInserted(index)
+//
+//    }
 
 
     fun removeItem(position: Int){
@@ -83,11 +92,13 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
 
     private fun asyncRandomNumbers(randomNumber: Int) = runBlocking{
         GlobalScope.launch {
-            val index = Random.nextInt(randomNumber)
+            val index = (0..10).random()
+
+          //  val index = Random.nextInt(randomNumber)
             Log.d("Thread", "from thread ${Thread.currentThread().name}")
            // delay(5000)
-            DataSource.addDataSet(index)
-            returnDataOnMainThread(index)
+
+            returnDataOnMainThread(DataSource.addDataSet(index))
         }
 
     }

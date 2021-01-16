@@ -2,9 +2,9 @@ package some.code.testforavito.models
 
 data class NumberPost(
 
-    var number: String,
+    var number: Int,
 
-    var title: String
+    var position: Int
 
 
 ) {

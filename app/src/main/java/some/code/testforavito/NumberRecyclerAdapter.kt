@@ -50,7 +50,7 @@ class NumberRecyclerAdapter(private val listener: OnItemClickListener): Recycler
         items = numberList
 //        diffResult.dispatchUpdatesTo(this)
 
-      //  differ.submitList(null)
+       //differ.submitList(null)
         differ.submitList(numberList)
 
 
@@ -63,12 +63,12 @@ class NumberRecyclerAdapter(private val listener: OnItemClickListener): Recycler
 
         override fun areContentsTheSame(oldItem: NumberPost, newItem: NumberPost): Boolean {
 
-            return oldItem == newItem
+            return true
 
         }
 
         override fun areItemsTheSame(oldItem: NumberPost, newItem: NumberPost): Boolean {
-            return oldItem== newItem
+            return true
         }
     }
 
@@ -108,8 +108,10 @@ class NumberRecyclerAdapter(private val listener: OnItemClickListener): Recycler
     {
         val numberText = itemView.number_title
         val deleteButton = itemView.delete_button
+        val position = itemView.position
         fun bind(numberPost: NumberPost){
-            numberText.text = numberPost.number
+            numberText.text = numberPost.number.toString()
+            position.text = numberPost.position.toString()
         }
 
         init {

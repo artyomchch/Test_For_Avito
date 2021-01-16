@@ -16,6 +16,7 @@ import kotlin.random.Random
 class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListener {
     private lateinit var numberAdapter: NumberRecyclerAdapter
     private val mHandler = Handler()
+    private var periodInterval: Int = 10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +40,7 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         override fun run() {
             mHandler.postDelayed(this, 5000)
             Toast.makeText(this@MainActivity, "5 sec", Toast.LENGTH_SHORT).show()
-
-
-            asyncRandomNumbers(100)
+            asyncRandomNumbers(periodInterval)
         }
     }
 
@@ -90,9 +89,10 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
 
 
 
-    private fun asyncRandomNumbers(randomNumber: Int) = runBlocking{
+    private fun asyncRandomNumbers(period: Int) = runBlocking{
         GlobalScope.launch {
-            val index = (0..10).random()
+            val index = (period..period+10).random()
+            periodInterval += 10
 
           //  val index = Random.nextInt(randomNumber)
             Log.d("Thread", "from thread ${Thread.currentThread().name}")

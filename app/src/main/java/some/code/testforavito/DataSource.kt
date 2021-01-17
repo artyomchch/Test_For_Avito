@@ -10,6 +10,7 @@ class DataSource {
     companion object{
         private val list = ArrayList<NumberPost>()
         private val sortNumber : ArrayList<Int> = arrayListOf()
+        private var deleteNumber: ArrayList<Int> = arrayListOf()
 
         fun createDataSet(): ArrayList<NumberPost>{
             var i = 0
@@ -27,8 +28,7 @@ class DataSource {
             return list
         }
 
-        fun addDataSet(number: Int): Int {
-            val singleNumber: ArrayList<Int> = arrayListOf()
+        fun addDataSet( number: Int): Int {
             var k = 0
             Log.d("check", number.toString() + "\n")
 
@@ -36,7 +36,18 @@ class DataSource {
                 Log.d("check", "$i")
             }
 
+//            if (deleteNumber.isNotEmpty()){
+//                deleteNumber.sort()
+//                val del = deleteNumber[0]
+//                deleteNumber.remove(0)
+//              //  number = del
+//            }
+
+
+
             Log.d("Thread", "from thread ${Thread.currentThread().name}")
+
+
             if (list.size == 0){
                 list.add(0 , NumberPost(number, list.size))
                 return 0
@@ -72,6 +83,49 @@ class DataSource {
             return k-1
         }
 
+        fun addDeleteData(): Int{
+            var k = 0
+
+            deleteNumber.sort()
+            val del = deleteNumber[0]
+            deleteNumber.remove(0)
+
+
+            if (list.size == 0){
+                list.add(0 , NumberPost(del, list.size))
+                return 0
+            }
+
+            if (del > list[list.size-1].number){
+                list.add(list.size , NumberPost(del, list.size))
+                return list.size
+            }
+
+            if (del < list[0].number){
+                list.add(0, NumberPost(del, list.size))
+                return 0
+            }
+
+            for (i in list.iterator()){
+                k++
+                if (list[k-1].number < del && list[k].number >= del){
+                    list.add(k, NumberPost(del, list.size))
+                    return k
+                }
+                else if (list[k-1].number == del){
+                    list.add(k-1, NumberPost(del, list.size))
+                    break
+                }
+                else{
+                    continue
+                }
+            }
+
+
+            return k-1
+
+        }
+
 
         fun elements(): ArrayList<Int>{
             val element: ArrayList<Int> = arrayListOf()
@@ -83,8 +137,29 @@ class DataSource {
 
         }
 
+        fun deleteNumberReturnInt(): Int{
+            deleteNumber.sort()
+            Log.d("number", "deleteNumberReturnInt: $deleteNumber")
+
+            val del = deleteNumber[0]
+            Log.d("number", "deleteNumberReturnInt: $del")
+            deleteNumber.remove(del)
+            Log.d("number", "deleteNumberReturnInt: $deleteNumber")
+            return del
+        }
+
+        fun returnNumberDelete(): ArrayList<Int>{
+            return deleteNumber
+        }
+
+
+
+
+
         fun deletePosition(position: Int){
+            deleteNumber.add(list[position].number)
             list.removeAt(position)
+
         }
     }
 }

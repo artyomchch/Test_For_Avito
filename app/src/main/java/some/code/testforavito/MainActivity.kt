@@ -1,9 +1,8 @@
 package some.code.testforavito
 
-import android.graphics.Movie
+
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
@@ -80,8 +79,7 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
             Log.d("elements", i.toString())
         }
 
-       // stopRepeating()
-      //  startRepeating()
+
 
         Log.d("check", "onCreate: $periodInterval")
         super.onRestoreInstanceState(savedInstanceState)
@@ -89,9 +87,16 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
     }
 
 
+    fun pullEvent(){
+        DataSource.returnNumberDelete()
+        var pull: String = ""
+        for (i in DataSource.returnNumberDelete()){
+            pull += "$i "
+        }
+        pull_event.text = pull
+    }
 
     fun startRepeating() {
-        //mHandler.postDelayed(mToastRunnable, 5000)
         mToastRunnable.run()
     }
 
@@ -110,19 +115,14 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
                 asyncRandomNumbers(periodInterval)
                 mHandler.postDelayed(this, 5000)
 
-
             }
-          //  Toast.makeText(this@MainActivity, "5 sec", Toast.LENGTH_SHORT).show()
-
 
         }
     }
 
 
     private fun addDataSet(){
-//        val data = DataSource.createDataSet()
         numberAdapter.submitList(data)
-
     }
 
 
@@ -163,8 +163,15 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
           //  val index = Random.nextInt(randomNumber)
             Log.d("Thread", "from thread ${Thread.currentThread().name}")
            // delay(5000)
+            pullEvent()
+            if (DataSource.returnNumberDelete().isNotEmpty()){
 
-            returnDataOnMainThread(DataSource.addDataSet(index))
+                returnDataOnMainThread(DataSource.addDataSet(DataSource.deleteNumberReturnInt())) // возращаем первое число из пула
+            }
+            else{
+                returnDataOnMainThread(DataSource.addDataSet(index))
+            }
+
         }
 
     }

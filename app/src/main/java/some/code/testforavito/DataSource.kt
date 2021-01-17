@@ -13,7 +13,7 @@ class DataSource {
 
         fun createDataSet(): ArrayList<NumberPost>{
             var i = 0
-            while (i != 15) {
+            while (i != 3) {
                 val index = Random.nextInt(200)
                 sortNumber.add(index)
                 i++
@@ -70,6 +70,17 @@ class DataSource {
 
            // list.add(2, NumberPost(number, list.size))
             return k-1
+        }
+
+
+        fun elements(): ArrayList<Int>{
+            val element: ArrayList<Int> = arrayListOf()
+            for (i in list.iterator()){
+                element.add(i.number)
+            }
+            Log.d("elements", element.toString() )
+            return element
+
         }
 
         fun deletePosition(position: Int){

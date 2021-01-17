@@ -1,7 +1,6 @@
 package some.code.testforavito
 
 import android.util.Log
-import some.code.testforavito.logic.NumberLogic
 import some.code.testforavito.models.NumberPost
 import kotlin.random.Random
 

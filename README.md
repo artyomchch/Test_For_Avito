@@ -2,7 +2,7 @@
 Recycler View + Async + Change phone rotate
 
 # Изменчивый Recycler
-У нас есть экран с RecyclerView, на нем есть список в два столбца, изначально 15 элементов.
+У нас есть экран с RecyclerView, на нем есть список в два столбца, изначально 15 элементов.  :white_check_mark: 
 
 ## Требования:
 
@@ -26,3 +26,5 @@ Recycler View + Async + Change phone rotate
 
  - Выполненное задание нужно загрузить на github -:white_check_mark: 
 ##
+![](images/Screenshot_1610925738.png) 
+![](images/Screenshot_1610925750.png)

@@ -16,18 +16,13 @@ class NumberRecyclerAdapter(private val listener: OnItemClickListener): Recycler
     private var items: List<NumberPost> = ArrayList()
 
 
-
-
-
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return NumberViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.layout_number_list_item, parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) { // отобраджения
         when(holder){
             is NumberViewHolder -> {
                 holder.bind(items[position])
@@ -39,21 +34,9 @@ class NumberRecyclerAdapter(private val listener: OnItemClickListener): Recycler
         return items.size
     }
 
-    fun submitList(numberList: List<NumberPost>){
-//        val oldList = items
-//        val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(
-//            NumberItemDiffCallback(
-//                oldList,
-//                numberList
-//            )
-//        )
+    fun submitList(numberList: List<NumberPost>){ // подтверждения списка
         items = numberList
-//        diffResult.dispatchUpdatesTo(this)
-
-       //differ.submitList(null)
         differ.submitList(numberList)
-
-
 
     }
 
@@ -72,31 +55,8 @@ class NumberRecyclerAdapter(private val listener: OnItemClickListener): Recycler
         }
     }
 
-    private val differ = AsyncListDiffer(this, DIFF_CALLBACK)
+    private val differ = AsyncListDiffer(this, DIFF_CALLBACK) // добавление элементов асинхронно
 
-
-
-
-    class NumberItemDiffCallback(
-        var oldNumberList: List<NumberPost>,
-        var newNumberList: List<NumberPost>
-    ): DiffUtil.Callback(){
-        override fun getOldListSize(): Int {
-            return oldNumberList.size
-        }
-
-        override fun getNewListSize(): Int {
-            return newNumberList.size
-        }
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return (oldNumberList == newNumberList)
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return (oldNumberList == newNumberList)
-        }
-    }
 
 
 

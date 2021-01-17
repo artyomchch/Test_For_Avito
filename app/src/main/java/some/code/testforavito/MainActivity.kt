@@ -20,13 +20,13 @@ import some.code.testforavito.models.NumberPost
 @Suppress("DEPRECATION", "BlockingMethodInNonBlockingContext")
 class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListener {
     private lateinit var numberAdapter: NumberRecyclerAdapter
-    private val mHandler = Handler()
-    private var periodInterval: Int = 0
-    private var savedRecyclerLayoutState: Parcelable? = null
-    private val BUNDLE_RECYCLER_LAYOUT = "recycler_layout"
-    private val data = DataSource.createDataSet()
-    private var dataSaveElements = arrayListOf<Int>()
-    private var timerSet: Boolean = false
+    private val mHandler = Handler() // для задержки времени
+    private var periodInterval: Int = 0 // начало номера добавления элементов
+    private var savedRecyclerLayoutState: Parcelable? = null  // переход к элементу после поврота
+    private val BUNDLE_RECYCLER_LAYOUT = "recycler_layout"  // ключ
+    private val data = DataSource.createDataSet() // добавления рандомного списка
+    private var dataSaveElements = arrayListOf<Int>() // запоминания списка
+    private var timerSet: Boolean = false // отсчет таймера
 
 
 
@@ -37,9 +37,9 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         setContentView(R.layout.activity_main)
 
 
-            initRecyclerView()
-            addDataSet()
-            startRepeating()
+            initRecyclerView() // инициализация списка
+            addDataSet()  // добавления данных в список
+            startRepeating() // начало 5 сек добавления рандомных элементов
 
 
 
@@ -48,18 +48,18 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        stopRepeating()
+        stopRepeating() // остановка добавления элементов
 
-        outState.putInt("period", periodInterval)
+        outState.putInt("period", periodInterval)  // запоминаем период добавления
 
         outState.putParcelable(
             BUNDLE_RECYCLER_LAYOUT,
-            recycler_view.layoutManager?.onSaveInstanceState()
+            recycler_view.layoutManager?.onSaveInstanceState() // запоминание местоположение
         )
 
 
 
-       outState.putIntegerArrayList("data", DataSource.elements())
+       outState.putIntegerArrayList("data", DataSource.elements()) // запоминание данных
 
         Log.d("check", "onSaveInstanceState: ")
 
@@ -67,19 +67,19 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         Log.d("check", "onRestoreInstanceState: ")
-        periodInterval = savedInstanceState.getInt("period")
-        savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT);
-        dataSaveElements = savedInstanceState.getIntegerArrayList("data") as ArrayList<Int>
+        periodInterval = savedInstanceState.getInt("period")  // востановления периода
+        savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT) // вотсановление местоположения
+        dataSaveElements = savedInstanceState.getIntegerArrayList("data") as ArrayList<Int> // востановления данных для элементов
 
-        data.clear()
-        for (i in dataSaveElements){
+        data.clear()  // очищаем данные
+        for (i in dataSaveElements){ // добавляем в объект списка
             data.add(
                 NumberPost(
                     i, data.size
                 )
             )
         }
-        //dataSave.clear()
+
         for (i in dataSaveElements){
             Log.d("elements", i.toString())
         }
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
     }
 
 
-    fun pullEvent(){
+    fun pullEvent(){  // запоминание и добавления в UI (Pull Event) списка удаленных элементов
         DataSource.returnNumberDelete()
         var pull: String = ""
         for (i in DataSource.returnNumberDelete()){
@@ -101,17 +101,17 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         pull_event.text = pull
     }
 
-    fun startRepeating() {
+    fun startRepeating() {  // добавления раз 5 сек элементов
         mToastRunnable.run()
     }
 
-    fun stopRepeating(){
+    fun stopRepeating(){ // отановка добавления
         mHandler.removeCallbacks(mToastRunnable)
     }
 
     private val mToastRunnable: Runnable = object : Runnable {
 
-        override fun run() {
+        override fun run() {  // триггер на ожидания 5 сек в начале
             if (!timerSet){
                 timerSet = true
                 mHandler.postDelayed(this, 5000)
@@ -126,20 +126,20 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
     }
 
 
-    private fun addDataSet(){
+    private fun addDataSet(){  // добавление данных
         numberAdapter.submitList(data)
     }
 
 
 
-    fun removeItem(position: Int){
+    fun removeItem(position: Int){  // удаление элементов + анимация
         DataSource.deletePosition(position)
         numberAdapter.notifyItemRemoved(position)
     }
 
 
 
-    override fun onItemClick(position: Int) {
+    override fun onItemClick(position: Int) { // удаление элемента при нажитие на кнопку
         Toast.makeText(this, "Item $position clicked", Toast.LENGTH_SHORT).show()
         Log.d("Thread", "Thread is -> ${Thread.currentThread()} ")
         //asyncRandomNumbers(5)
@@ -147,21 +147,21 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         numberAdapter.notifyItemChanged(position)
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView(){  // инициализация списка
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-
+            //расположение элементов в зависимоти от поворота экрана
             if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT ){
                 recycler_view.layoutManager = GridLayoutManager(this@MainActivity, 2)
             }
            else{
                 recycler_view.layoutManager = GridLayoutManager(this@MainActivity, 4)
            }
-
+            // оступы от элементов
             val topSpacingItemDecoration = TopSpacingItemDecoration(15)
-
             addItemDecoration(topSpacingItemDecoration)
             numberAdapter = NumberRecyclerAdapter(this@MainActivity)
+
             adapter = numberAdapter
         }
     }
@@ -169,15 +169,15 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
 
 
 
-    private fun asyncRandomNumbers(period: Int) = runBlocking{
+    private fun asyncRandomNumbers(period: Int) = runBlocking{  // асинхронная работа
         GlobalScope.launch {
             val index = (period..period+10).random()
             periodInterval += 10
-          //  Thread.sleep(5000)
-          //  val index = Random.nextInt(randomNumber)
+
+
             Log.d("Thread", "from thread ${Thread.currentThread().name}")
-           // delay(5000)
-            pullEvent()
+
+            pullEvent() // добавления элементов в пул
             if (DataSource.returnNumberDelete().isNotEmpty()){
 
                 returnDataOnMainThread(DataSource.addDataSet(DataSource.deleteNumberReturnInt())) // возращаем первое число из пула
@@ -190,7 +190,7 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
 
     }
 
-    suspend fun returnDataOnMainThread(index: Int){
+    suspend fun returnDataOnMainThread(index: Int){ // переход в главный поток
         return withContext(Dispatchers.Main){
             Log.d("Thread", "from thread ${Thread.currentThread().name}")
             Toast.makeText(this@MainActivity, "$index", Toast.LENGTH_SHORT).show()

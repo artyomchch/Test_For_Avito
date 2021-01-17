@@ -1,12 +1,16 @@
 package some.code.testforavito
 
 
+import android.app.Activity
+import android.content.res.Configuration
+import android.media.VolumeShaper
 import android.os.Bundle
 import android.os.Handler
 import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
@@ -71,8 +75,9 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
         for (i in dataSaveElements){
             data.add(
                 NumberPost(
-                i, data.size
-            ))
+                    i, data.size
+                )
+            )
         }
         //dataSave.clear()
         for (i in dataSaveElements){
@@ -145,7 +150,16 @@ class MainActivity : AppCompatActivity(), NumberRecyclerAdapter.OnItemClickListe
     private fun initRecyclerView(){
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            val topSpacingItemDecoration = TopSpacingItemDecoration(30)
+
+            if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT ){
+                recycler_view.layoutManager = GridLayoutManager(this@MainActivity, 2)
+            }
+           else{
+                recycler_view.layoutManager = GridLayoutManager(this@MainActivity, 4)
+           }
+
+            val topSpacingItemDecoration = TopSpacingItemDecoration(15)
+
             addItemDecoration(topSpacingItemDecoration)
             numberAdapter = NumberRecyclerAdapter(this@MainActivity)
             adapter = numberAdapter

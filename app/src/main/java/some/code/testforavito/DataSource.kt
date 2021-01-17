@@ -14,8 +14,8 @@ class DataSource {
 
         fun createDataSet(): ArrayList<NumberPost>{
             var i = 0
-            while (i != 3) {
-                val index = Random.nextInt(200)
+            while (i != 15) {
+                val index = Random.nextInt(150)
                 sortNumber.add(index)
                 i++
             }
